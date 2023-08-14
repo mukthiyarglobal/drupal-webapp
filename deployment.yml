@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: drupal
-          image: materialdash.azurecr.io/drupal
+          image: materialdash.azurecr.io/drupal:5
           ports:
             - containerPort: 8080
           env:
