@@ -1,0 +1,23 @@
+stages:
+    - b&p acr
+    - deploy to aks
+    
+docker_build:
+    stage: b&p acr
+    image: docker:latest
+    services:
+      - docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
+    script:
+      - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY_URL --username $CI_REGISTRY_USER --password-stdin
+      - docker build -t $ACR_REGISTRY_IMAGE:$CI_PIPELINE_IID .
+      - docker push $ACR_REGISTRY_IMAGE:$CI_PIPELINE_IID
+
+deploy:
+  stage: deploy to aks
+  image:
+    name: bitnami/kubectl:1.14
+    entrypoint: [""]
+  script:
+    - echo "$KUBE_CONFIG" > kubeconfig.yml
+    - kubectl --kubeconfig=kubeconfig.yml apply -f $KUBE_DEPLOYMENT_FILE --namespace=$KUBE_NAMESPACE
+
