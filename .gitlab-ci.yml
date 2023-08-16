@@ -1,6 +1,8 @@
 stages:
     - b&p acr
     - deploy to aks
+variables:
+  IMAGE_TAG: $CI_PIPELINE_IID
     
 docker_build:
     stage: b&p acr
@@ -9,8 +11,8 @@ docker_build:
       - docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
     script:
       - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY_URL --username $CI_REGISTRY_USER --password-stdin
-      - docker build -t $ACR_REGISTRY_IMAGE:$CI_PIPELINE_IID .
-      - docker push $ACR_REGISTRY_IMAGE:$CI_PIPELINE_IID
+      - docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
+      - docker push $ACR_REGISTRY_IMAGE:$IMAGE_TAG
 
 deploy:
   stage: deploy to aks
