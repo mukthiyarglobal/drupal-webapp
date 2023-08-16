@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: mysql
 spec:
   ports:
     -
@@ -73,7 +73,7 @@ spec:
             - name: MYSQL_PASSWORD
               value: "12345"
       imagePullSecrets:
-        - name: drupalkey
+        - name: appkey
 ---
 apiVersion: v1
 kind: Service
