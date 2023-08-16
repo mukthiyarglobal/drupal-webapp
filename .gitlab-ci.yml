@@ -22,6 +22,4 @@ deploy:
   script:
     - echo "$KUBE_CONFIG" > kubeconfig.yml
     - kubectl --kubeconfig=kubeconfig.yml apply -f $KUBE_DEPLOYMENT_FILE --namespace=$KUBE_NAMESPACE
-  environment:
-    - $IMAGE_TAG
 
