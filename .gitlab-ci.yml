@@ -17,9 +17,11 @@ docker_build:
 deploy:
   stage: deploy to aks
   image:
-    name: bitnami/kubectl:1.14
+    name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
     - echo "$KUBE_CONFIG" > kubeconfig.yml
     - kubectl --kubeconfig=kubeconfig.yml apply -f $KUBE_DEPLOYMENT_FILE --namespace=$KUBE_NAMESPACE
+  environment:
+    - $IMAGE_TAG
 
