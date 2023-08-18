@@ -2,6 +2,53 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "12345"
+            - name: MYSQL_DATABASE
+              value: "drupal"
+            - name: MYSQL_USER
+              value: "drupaluser"
+            - name: MYSQL_PASSWORD
+              value: "12345"
+            - name: MYSQL_HOST
+              value: "mysql-service"
+      imagePullSecrets:
+        - name: sendkey
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+    -
+      name: mysql
+      port: 3306
+      protocol: TCP
+  selector:
+    app: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: drupal-deployment
 spec:
   replicas: 1
@@ -15,7 +62,7 @@ spec:
     spec:
       containers:
         - name: drupal
-          image: materialdash.azurecr.io/drupal
+          image: materialdash.azurecr.io/drupal:__IMAGE_TAG__
           ports:
             - containerPort: 8080
           env:
@@ -28,7 +75,7 @@ spec:
             - name: MYSQL_HOST
               value: "mysql-service"
       imagePullSecrets:
-        - name: appkey
+        - name: sendkey
 ---
 apiVersion: v1
 kind: Service
