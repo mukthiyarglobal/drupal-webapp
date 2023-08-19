@@ -10,8 +10,8 @@ docker_build:
     services:
       - docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
     script:
-      - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY_URL --username $CI_REGISTRY_USER --password-stdin
       - docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
+      - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY_URL --username $CI_REGISTRY_USER --password-stdin
       - docker push $ACR_REGISTRY_IMAGE:$IMAGE_TAG
 
 deploy:

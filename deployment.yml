@@ -16,6 +16,7 @@ spec:
       containers:
         - name: mysql
           image: mysql:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3306
           env:
@@ -30,7 +31,7 @@ spec:
             - name: MYSQL_HOST
               value: "mysql-service"
       imagePullSecrets:
-        - name: sendkey
+        - name: notekey 
 
 ---
 apiVersion: v1
@@ -63,6 +64,7 @@ spec:
       containers:
         - name: drupal
           image: materialdash.azurecr.io/drupal:__IMAGE_TAG__
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
@@ -75,7 +77,7 @@ spec:
             - name: MYSQL_HOST
               value: "mysql-service"
       imagePullSecrets:
-        - name: sendkey
+        - name: notekey 
 ---
 apiVersion: v1
 kind: Service
