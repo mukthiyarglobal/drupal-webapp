@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: drupal-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: drupal
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: drupal
-          image: materialdash.azurecr.io/drupal:__IMAGE_TAG__
+          image: materialdash.azurecr.io/drupal:36
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
