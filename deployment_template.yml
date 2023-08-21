@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drupal
+  template:
+    metadata:
+      labels:
+        app: drupal 
+    spec:
+      containers:
+        - name: drupal
+          image: materialdash.azurecr.io/drupal:__IMAGE_TAG__
+          ports:
+            - containerPort: 80
