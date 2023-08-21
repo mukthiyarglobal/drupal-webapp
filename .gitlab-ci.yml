@@ -1,8 +1,8 @@
 stages:
     - b&p acr
     - deploy to aks
-variables:
-  IMAGE_TAG: $CI_COMMIT_REF_SLUG
+#variables:
+  #IMAGE_TAG: $CI_COMMIT_REF_SLUG
     
 docker_build:
     stage: b&p acr
@@ -10,9 +10,12 @@ docker_build:
     services:
       - docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
     script:
-      - docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
+      - export TAG=$(git rev-parse --short HEAD)
+      #- docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
+      - docker build -t $ACR_REGISTRY_IMAGE:$TAG .
       - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY_URL --username $CI_REGISTRY_USER --password-stdin
-      - docker push $ACR_REGISTRY_IMAGE:$IMAGE_TAG
+      #- docker push $ACR_REGISTRY_IMAGE:$IMAGE_TAG
+      - docker push $ACR_REGISTRY_IMAGE:$TAG
 
 deploy:
   stage: deploy to aks
