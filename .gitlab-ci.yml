@@ -2,7 +2,9 @@ stages:
     - b&p acr
     - deploy to aks
 variables:
-  IMAGE_TAG: "$CI_PIPELINE_IID"
+  #IMAGE_TAG: "$CI_PIPELINE_IID"
+  IMAGE_TAG: "$latest"
+  
     
 docker_build:
     stage: b&p acr
