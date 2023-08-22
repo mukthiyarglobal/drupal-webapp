@@ -3,7 +3,7 @@ stages:
     - deploy to aks
 variables:
   #IMAGE_TAG: "$CI_PIPELINE_IID"
-  IMAGE_TAG: "$latest"
+  #IMAGE_TAG: "$latest"
   
     
 docker_build:
@@ -12,10 +12,11 @@ docker_build:
     services:
       - docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
     script:
-      - docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
+      #- docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
+      - docker build -t $ACR_REGISTRY_IMAGE:latest .
       - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY_URL --username $CI_REGISTRY_USER --password-stdin
-      - docker push $ACR_REGISTRY_IMAGE:$IMAGE_TAG
-
+      #- docker push $ACR_REGISTRY_IMAGE:$IMAGE_TAG
+      - docker push $ACR_REGISTRY_IMAGE:latest
 deploy:
   stage: deploy to aks
   image:
