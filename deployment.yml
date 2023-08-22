@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: drupal
-          image: materialdash.azurecr.io/drupal:$(LATEST_IMAGE_TAG)
-          imagePullPolicy: IfNotPresent
+          image: materialdash.azurecr.io/drupal:40
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
