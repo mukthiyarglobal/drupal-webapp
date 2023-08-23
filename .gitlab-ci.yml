@@ -11,8 +11,8 @@ docker_build:
     image: docker:latest
     tags:
       - web
-    services:
-      - docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
+    #services:
+      #- docker:dind # allows developers to run a Docker container within an already running Docker container to support CI/CD pipelines.
     script:
       #- docker build -t $ACR_REGISTRY_IMAGE:$IMAGE_TAG .
       - docker build -t $ACR_REGISTRY_IMAGE:latest .
