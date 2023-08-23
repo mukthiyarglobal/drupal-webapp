@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: drupal
-          image: materialdash.azurecr.io/drupal
+          image: materialdash.azurecr.io/drupal:__IMAGE_TAG__
           command: ["apache2-foreground"]
           imagePullPolicy: Always
           ports:
