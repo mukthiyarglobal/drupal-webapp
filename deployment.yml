@@ -16,6 +16,7 @@ spec:
       containers:
         - name: drupal
           image: materialdash.azurecr.io/drupal
+          command: ["apache2-foreground"]
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
