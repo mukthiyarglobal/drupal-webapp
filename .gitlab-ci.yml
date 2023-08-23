@@ -1,7 +1,7 @@
 stages:
     - b&p acr
     - deploy to aks
-variables:
+#variables:
   #IMAGE_TAG: "$CI_PIPELINE_IID"
   #IMAGE_TAG: "$latest"
   
