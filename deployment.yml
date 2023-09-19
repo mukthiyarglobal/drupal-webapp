@@ -1,94 +1,158 @@
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mysql-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mysql
-  template:
-    metadata:
-      labels:
-        app: mysql
-    spec:
-      containers:
-        - name: mysql
-          image: mysql:latest
-          ports:
-            - containerPort: 3306
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: "12345"
-            - name: MYSQL_DATABASE
-              value: "drupal"
-            - name: MYSQL_USER
-              value: "drupaluser"
-            - name: MYSQL_PASSWORD
-              value: "12345"
-            - name: MYSQL_HOST
-              value: "mysql-service"
-      imagePullSecrets:
-        - name: notekey
-
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: drupal-mysql
+  labels:
+    app: drupal
 spec:
   ports:
-    -
-      name: mysql
-      port: 3306
-      protocol: TCP
+    - port: 3306
   selector:
-    app: mysql
+    app: drupal
+    tier: mysql
+  clusterIP: None
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: drupal-deployment
+  name: drupal-mysql
+  labels:
+    app: drupal
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: drupal
+      tier: mysql
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: drupal
+        tier: mysql
     spec:
       containers:
-        - name: drupal
-          image: materialdash.azurecr.io/drupal:__IMAGE_TAG__
-          command: ["apache2-foreground"]
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
+        - image: mysql:latest
+          name: mysql
           env:
             - name: MYSQL_DATABASE
-              value: "drupal"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: database
             - name: MYSQL_USER
-              value: "drupaluser"
-            - name: MYSQL_PASSWORD
-              value: "12345"
-            - name: MYSQL_HOST
-              value: "mysql-service"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: username
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password
+          ports:
+            - containerPort: 3306
+              name: mysql
       imagePullSecrets:
-        - name: notekey 
+        - name: doublekey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drupal-mysql
+  labels:
+    app: drupal
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: drupal
+    tier: mysql
+  clusterIP: None
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal-mysql
+  labels:
+    app: drupal
+spec:
+  selector:
+    matchLabels:
+      app: drupal
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: drupal
+        tier: mysql
+    spec:
+      containers:
+        - image: mysql:latest
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password
+          ports:
+            - containerPort: 3306
+              name: mysql
+      imagePullSecrets:
+        - name: doublekey
+
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: drupal
+  labels:
+    app: drupal
 spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
   selector:
     app: drupal
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
   type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal
+  labels:
+    app: drupal
+spec:
+  selector:
+    matchLabels:
+      app: drupal
+      tier: frontend
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: drupal
+        tier: frontend
+    spec:
+      containers:
+        - image: myclusterss.azurecr.io/drupal
+          name: drupal
+          ports:
+            - containerPort: 8080
+              name: drupal
+      imagePullSecrets:
+        - name: doublekey
+
+        
+
