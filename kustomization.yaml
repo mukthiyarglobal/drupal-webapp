@@ -1,0 +1,8 @@
+secretGenerator:
+- name: mysql-pass
+  literals:
+    - password=master123
+    - username=root
+    - database=mysitedb
+resources:
+  - deployment.yml
