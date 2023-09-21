@@ -31,7 +31,7 @@ jobs:
 
       - name: Run kustomize build
         run: |
-          kustomize build . | kubectl apply -f deployment.yml
+          kustomize build .
      #     working-directory: ${{ github.workspace }}
               
       - name: Deploy into AKS
