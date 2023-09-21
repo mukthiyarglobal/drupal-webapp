@@ -38,8 +38,8 @@ jobs:
         run: |-
           ./kustomize edit set image  myclusterss.azurecr.io./drupal:${{ github.run_number }}
           ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/$DEPLOYMENT_NAME
-          kubectl get services -o wide
+      #    kubectl rollout status deployment/$DEPLOYMENT_NAME
+      #   kubectl get services -o wide
 
      # - name: Run kustomize build
      #   run: |
