@@ -61,57 +61,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: drupal-mysql
-  labels:
-    app: drupal
-spec:
-  ports:
-    - port: 3306
-  selector:
-    app: drupal
-    tier: mysql
-  clusterIP: None
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: drupal-mysql
-  labels:
-    app: drupal
-spec:
-  selector:
-    matchLabels:
-      app: drupal
-      tier: mysql
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: drupal
-        tier: mysql
-    spec:
-      containers:
-        - image: mysql:latest
-          name: mysql
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-pass
-                  key: password
-          ports:
-            - containerPort: 3306
-              name: mysql
-      imagePullSecrets:
-        - name: doublekey
-
-
----
-apiVersion: v1
-kind: Service
-metadata:
   name: drupal
   labels:
     app: drupal
