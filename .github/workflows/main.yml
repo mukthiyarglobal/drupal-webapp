@@ -37,10 +37,11 @@ jobs:
            action: deploy
            manifests: |
               deployment.yml        
-              kustomization.yaml
-      # run: |
-       #  kubectl apply -k ./
-      #   kubectl get all
            images: |
                 myclusterss.azurecr.io/drupal:${{ github.run_number }}
+
+      - name: Deploy using Kustomize
+        run: |
+          kubectl apply -k ./
+          kubectl get all
               
