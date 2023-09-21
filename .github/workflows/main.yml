@@ -2,6 +2,7 @@ name: Drupal application
 on: [push]
 jobs:
    build:
+      name: Build docker container
       runs-on: ubuntu-latest
       steps:
          - name: checkout
