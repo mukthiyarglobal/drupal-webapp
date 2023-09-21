@@ -28,6 +28,11 @@ jobs:
       - uses: Azure/k8s-set-context@v2
         with:
            kubeconfig: ${{ secrets.KUBE_CONFIG }}  
+
+      - name: Run kustomize build
+        run: |
+          kustomize build . > deployment.yml
+          working-directory: ${{ github.workspace }}
               
       - name: Deploy into AKS
         uses: Azure/k8s-deploy@v4
@@ -35,7 +40,6 @@ jobs:
            action: deploy
            manifests: |
               deployment.yml
-              kustomization.yaml
            images: |
                myclusterss.azurecr.io/drupal:${{ github.run_number }}
      # - name: Apply Kubernetes Manifests
