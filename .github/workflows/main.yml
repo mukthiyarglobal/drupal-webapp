@@ -23,4 +23,24 @@ jobs:
       - name: Build and push docker image
         run: |
           docker build . -t myclusterss.azurecr.io/drupal:${{ github.run_number }}
-          docker push myclusterss.azurecr.io/drupal:${{ github.run_number }}              
+          docker push myclusterss.azurecr.io/drupal:${{ github.run_number }} 
+          
+      - uses: azure/setup-kubectl@v2.0
+
+      - uses: Azure/k8s-set-context@v2
+        with:
+           kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Deploy into AKS
+        uses: Azure/k8s-deploy@v4
+        with:
+           action: deploy
+           manifests: |
+              deployment.yml        
+              kustomization.yaml
+      # run: |
+       #  kubectl apply -k ./
+      #   kubectl get all
+           images: |
+                myclusterss.azurecr.io/drupal:${{ github.run_number }}
+              
