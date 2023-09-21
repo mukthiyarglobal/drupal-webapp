@@ -1,10 +1,8 @@
 name: Drupal application
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build:
     name: Build docker container
@@ -29,8 +27,7 @@ jobs:
 
       - uses: Azure/k8s-set-context@v2
         with:
-           kubeconfig: ${{ secrets.KUBE_CONFIG }}
-     
+           kubeconfig: ${{ secrets.KUBE_CONFIG }}     
       - name: Deploy into AKS
         uses: Azure/k8s-deploy@v4
         with:
@@ -39,10 +36,9 @@ jobs:
               deployment.yml        
            images: |
                myclusterss.azurecr.io/drupal:${{ github.run_number }}
-
-      - name: Apply Kubernetes Manifests
-        run: |
-          kustomize build .
+     # - name: Apply Kubernetes Manifests
+     #   run: |
+     #     kustomize build .
 
      # - name: Deploy using Kustomize
       #  run: |
