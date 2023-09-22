@@ -28,23 +28,6 @@ jobs:
       - uses: Azure/k8s-set-context@v2
         with:
            kubeconfig: ${{ secrets.KUBE_CONFIG }}  
-
-      #- name: Set up Kustomize
-       # run: |-
-        #  curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-         # chmod u+x ./kustomize
-
-     # - name: Deploy
-      #  run: |-
-        #  ./kustomize edit set image  myclusterss.azurecr.io./drupal:${{ github.run_number }}
-         # ./kustomize build . | kubectl apply -f -
-      #    kubectl rollout status deployment/$DEPLOYMENT_NAME
-      #   kubectl get services -o wide
-
-     # - name: Run kustomize build
-     #   run: |
-     #     kustomize build .
-     #     working-directory: ${{ github.workspace }}
               
       - name: Deploy into AKS
         uses: Azure/k8s-deploy@v4
@@ -52,14 +35,8 @@ jobs:
            action: deploy
            manifests: |
               deployment.yml
+              kustomization.yaml     
            images: |
                myclusterss.azurecr.io/drupal:${{ github.run_number }}
-     # - name: Apply Kubernetes Manifests
-     #   run: |
-     #     kustomize build .
-
-     # - name: Deploy using Kustomize
-      #  run: |
-       #   kubectl apply -k ./
-        #  kubectl get all
+  
               
