@@ -22,12 +22,16 @@ jobs:
         run: |
           docker build . -t myclusterss.azurecr.io/drupal:${{ github.run_number }}
           docker push myclusterss.azurecr.io/drupal:${{ github.run_number }} 
-          
-     # - uses: azure/setup-kubectl@v2.0
-
+              
       - uses: Azure/k8s-set-context@v2
         with:
            kubeconfig: ${{ secrets.KUBE_CONFIG }}  
+
+      - uses: azure/setup-kubectl@v2.0
+
+      - name: Apply Kustomization File
+        run: |
+          kubectl apply -k .
               
       - name: Deploy into AKS
         uses: Azure/k8s-deploy@v4
