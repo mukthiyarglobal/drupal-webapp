@@ -32,13 +32,15 @@ jobs:
       - name: Apply Kustomization File
         run: |
           kubectl apply -k .  
-          kubectl apply -f deployment.yml
+      # kubectl apply -f deployment.yml
 
           
       - name: deploy into aks
         uses: Azure/k8s-deploy@v4
         with:
            action: deploy
+           manifests: |
+              deployment.yml
            images: |
                myclusterss.azurecr.io/drupal:${{ github.run_number }}
               
