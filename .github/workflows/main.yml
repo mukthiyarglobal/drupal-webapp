@@ -33,8 +33,10 @@ jobs:
         run: |
           kubectl apply -k .  
           kubectl apply -f deployment.yml
+
           
-      - name : deploy into aks
+      - name: deploy into aks
+        uses: Azure/k8s-deploy@v4
         with:
            action: deploy
            images: |
